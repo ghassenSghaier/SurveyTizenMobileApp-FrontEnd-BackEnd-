@@ -1,0 +1,123 @@
+<!--
+Author: W3layouts
+Author URL: http://w3layouts.com
+License: Creative Commons Attribution 3.0 Unported
+License URL: http://creativecommons.org/licenses/by/3.0/
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>AskME Corporation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Modern Flip Sign In Form template Responsive, Login form web template,Flat Pricing tables,Flat Drop downs  Sign up Web Templates, Flat Web Templates, Login sign up Responsive web template, SmartPhone Compatible web template, free web designs for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- Custom Theme files -->
+<link href="css/style.css" rel="stylesheet" type="text/css" media="all" />
+<!-- //Custom Theme files -->
+<!-- web font -->
+<link href='//fonts.googleapis.com/css?family=Athiti:400,200,300,500,600,700' rel='stylesheet' type='text/css'> 
+<!-- //web font -->
+<!-- jS --> 
+<script src="js/jquery.min.js"></script> 
+<script src="js/script.js"></script> 
+<!-- //js -->
+<script type="text/javascript">
+function verifierUser(id) {
+	sessionStorage.setItem("user",id);
+	}
+var val_email="";
+var val_password="";
+var idUser;
+function update_val(){
+	val_email=document.getElementById('email').value;
+	val_password=document.getElementById('password').value;  
+	console.log(val_email);
+}
+function signin()
+{ 
+			$.ajax(
+							{
+								type : "GET",
+								url : "http://10.0.2.2/android/sign-in.php?email="+val_email+"&password="+val_password,
+								dataType:'json',
+								error: function () {console.log("erreur")},
+								success: function(data) {
+									$(data.utilisateur).each(function(index,value){	
+										var idUser=value.id	;
+									     verifierUser(value.id);
+									     window.location.href="index.html";
+										});
+									}	 	
+							});		  
+ }
+</script>
+</head>
+<body>
+	<!-- main -->
+	<div class="main-agile">		
+		<div id="logo"><img src="images/logo.png"/ width="150" height="150"></div>
+		<div id="w3ls_form" class="signin-form">
+			<!-- Sign In Form -->
+			<form id="signin" action="" method="post">
+				<div class="ribbon"><a href="#" id="flipToRecover" class="flipLink" title="Click Here to SignUp">Sign Up</a></div>
+				<h2>Se connecter</h2>
+				<p>Nom d'utilisateur </p>
+				<input type="text" id="email" name="email" placeholder="email" required="" onchange="update_val()"/>
+				<p>Mot de passe</p>
+				<input type="password" id="password" name="password" placeholder="" required="" onchange="update_val()"/>	 
+				<input type="checkbox" id="brand" value="">
+				<label for="brand"><span></span> Souviens-toi de moi ?</label> 
+				<input type="button" value="Se connecter" onclick="signin()">
+				<div class="signin-agileits-bottom"> 
+					<p><a href="#">Mot de passe oublié ?</a></p>    
+				</div> 
+				<div class="social-icons">
+					<ul>  
+						<li><a href="#"><span class="icons"></span><span class="text">Sign in with Facebook</span></a></li> 
+						<li class="twt"><a href="#"><span class="icons"></span><span class="text">Sign in with Twitter</span></a></li>  
+					</ul> 
+					<div class="clear"> </div>
+				</div>	
+			</form>
+			
+		
+			
+			
+			
+			<!-- //Sign In Form -->
+			<!-- Sign up Form-->
+			<form  action="http://10.0.2.2/android/sign-up.php" method="post">
+				<div class="ribbon"><a href="#" id="flipToRecover1" class="flipLink" title="Click Here to signin">Sign In</a></div>
+				<h3>Sign Up </h3>
+				<p>User Name </p>
+				<input type="text" name="nomprenom" placeholder="" required=""/>
+				<p>Your Email </p>
+				<input type="text" name="email" placeholder="" required=""/>
+				<p>User Name </p>
+				<input type="text" name="image" placeholder="" required=""/>
+				<p>Password</p>
+				<input type="password" name="password" placeholder="" required=""/>	
+				<input type="checkbox" id="brand1" value="">
+				<label for="brand1"><span></span>J'accepte le terme d'utilisation</label> 
+				<input type="submit" value="SIGN UP"> 
+			</form>
+			
+			<!-- Sign up Form-->
+			
+			<!--<script>
+				$(function() {
+					$("#datepicker").datepicker();
+				});
+			</script>-->
+			
+		</div>
+		<!-- copyright -->
+		<div class="copyright">
+			<p> © 2016 AskMe Corp . Tous les droits sont réservés </p>
+		</div>
+		<!-- //copyright -->  
+	</div>	
+	<!-- //main --> 
+</body>
+</html>

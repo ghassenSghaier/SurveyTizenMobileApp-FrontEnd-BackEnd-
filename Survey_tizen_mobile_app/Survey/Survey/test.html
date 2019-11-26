@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<title>SQLLite</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+</head>
+  <body>    
+   <br/><br/>
+    <div>
+         <input type="hidden" id="id"/>
+         <p>Titre:<input type="text" id="titre"/></p>
+         <p>Question:<input type="text" id="question"/></p>
+         <p>Réponse:<input type="text" id="reponse"/></p>
+         <button onClick="insertData()">Ajouter sondage</button>
+    </div> 
+    <div id="sondages"></div>
+  </body>
+  
+<script type="text/javascript"> 
+$(document).ready(function(){
+    DB.getInstance();
+});
+var params = {
+    db: 'ligams',                         //nom de la BDD
+    version: '1.0',                        //version
+    displayName: 'Ligams Database',        //nom de la BDD affiché
+    maxSize: 100000                        //en bytes
+};
+var DB = {};
+/**
+  * Renvoi l'instance unique de la connexion à la base de données locale, null si erreur
+  */
+DB.getInstance = function()
+{
+    if(DB.instance!=null) return DB.instance;
+    try
+    {
+        if(window.openDatabase)
+        {
+            DB.instance = openDatabase(params.db,params.version,params.displayName,params.maxSize);
+            createDB();
+            return DB.instance;
+        }
+        else
+        {
+            alert("Le navigateur ne supporte pas les bases de données.");
+        }
+    }
+    catch(e)
+    {
+        if(e===2) console.log("Version de la base de données invalide.");
+        else console.log("Exception : "+e);
+    }
+    DB.instance = null;
+    return null;
+};
+/**
+  * Crée la base de données locale si elle n'existe pas
+  */
+createDB = function()
+{
+    DB.getInstance().transaction(
+    function (trans) {
+        trans.executeSql('CREATE TABLE IF NOT EXISTS sondage (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, question TEXT NOT NULL,titre TEXT NOT NULL,reponse TEXT NOT NULL );', [], refreshHandler, errorHandler);
+    });
+};
+/**
+  * Supprime une entrée dans la base de données
+  */
+deleteData = function(id)
+{
+    DB.getInstance().transaction(
+    function (trans) {
+        trans.executeSql('DELETE FROM sondage WHERE id=?;', [id], refreshHandler, errorHandler);
+    });
+};
+/**
+  * Sélectionne tous les tuples de la base de données
+  */
+selectAll = function()
+{
+    DB.getInstance().transaction(
+    function (trans) {
+        trans.executeSql('SELECT * FROM sondage;', [], dataSelectAllHandler, errorHandler);
+    });
+};
+/**
+  * Sélectionne tous les tuples de la base de données
+  */
+insertData = function()
+{
+    if($('#nom').val()!='' && $('#prenom').val()!=''){
+        DB.getInstance().transaction(
+        function (trans) {
+            trans.executeSql('INSERT INTO sondage (question, titre, reponse) VALUES (?,?,?);', [$('#question').val(),$('#titre').val(),$('#reponse').val()], refreshHandler, errorHandler);
+        });
+    }
+};
+/**
+  * Efface les données du formulaire
+  */
+resetForm = function()
+{
+    $('#question').val('');
+    $('#titre').val('');
+    $('#reponse').val('');
+};
+
+////////////////////////////////////////////////////////////////////
+// EVENTS
+////////////////////////////////////////////////////////////////////
+
+/**
+  * Rafraichi les données affichées
+  */
+refreshHandler = function(trans, result)
+{    
+    resetForm();
+    selectAll();
+};
+/**
+  * Rafraichi les données affichées
+  */
+dataSelectAllHandler = function(trans, result)
+{
+    $('#sondages').html('');
+    var el = $('<ul></ul>');
+    for (var i=0; i<result.rows.length; i++) 
+    {
+        el.append('<li>'+result.rows.item(i)['id']+' : '+result.rows.item(i)['question']+' '+result.rows.item(i)['titre']+' '+result.rows.item(i)['reponse']+' <a href="javascript:deleteData('+result.rows.item(i)['id']+')">x</a></li>');
+    }
+    $('#sondages').append(el);
+};
+/**
+  * Traitement des erreurs
+  */
+errorHandler = function(trans, error){
+    alert(error.message);
+};
+    
+    </script>
+</html>
